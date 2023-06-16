@@ -1,20 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Login from "./src/pages/Login";
+import Home from "./src/pages/Home";
+import { Pressable, Text } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerRight: () => (
+              <Pressable
+                onPress={async () => {
+                  await AsyncStorage.removeItem('email');
+                  await AsyncStorage.removeItem('senha');
+                  await AsyncStorage.removeItem('message');
+                }}
+              >
+                <Icon
+                  style={{ marginRight: 20 }}
+                  name="logout"
+                  size={24}
+                  color="#4b9fe1"
+                />
+              </Pressable>
+            ),
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
